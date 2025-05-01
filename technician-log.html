@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Technician Log - MediLink IoT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f8fc;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 60px auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        h2,
+        h3 {
+            color: #007bff;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .info-box {
+            background-color: #eef5fc;
+            padding: 15px;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+        
+        textarea,
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+        
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #218838;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #888;
+        }
+        
+        label {
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Technician Maintenance Log</h2>
+
+        <div class="section info-box" id="equipmentInfo">
+            Loading equipment data...
+        </div>
+
+        <div class="section">
+            <h3>Nurse's Report</h3>
+            <div id="nurseReport" style="white-space: pre-line; background: #fcfcfc; padding: 10px; border-left: 4px solid #007bff;"></div>
+        </div>
+
+        <div class="section">
+            <h3>Technician Repair Action</h3>
+            <label for="repairAction">Describe actions taken:</label>
+            <textarea id="repairAction" rows="4" placeholder="E.g., Opened panel, replaced battery, cleaned connectors..."></textarea>
+
+            <label for="replacementParts">Suggested Spare Parts (if any):</label>
+            <input type="text" id="replacementParts" placeholder="E.g., Battery pack, power module, sensor board">
+        </div>
+
+        <button onclick="submitLog()">Submit Maintenance Log</button>
+
+        <div class="footer">
+            © 2025 MediLink Healthcare Systems | Maintenance Division
+        </div>
+    </div>
+
+    <script>
+        const technician = localStorage.getItem("technician");
+        const department = localStorage.getItem("department");
+        const equipment = localStorage.getItem("equipment");
+        const nurseReport = localStorage.getItem("nurseReport");
+
+        if (!technician || !department || !equipment) {
+            alert("Missing session data. Please login again.");
+            window.location.href = "login.html";
+        }
+
+        // Fill equipment info
+        document.getElementById("equipmentInfo").innerHTML = `
+            <strong>Technician:</strong> ${technician}<br>
+            <strong>Department:</strong> ${department.charAt(0).toUpperCase() + department.slice(1)}<br>
+            <strong>Equipment:</strong> ${equipment}<br>
+            <strong>Serial No:</strong> MED-${Math.floor(Math.random() * 9000 + 1000)}<br>
+            <strong>Log Date:</strong> ${new Date().toLocaleDateString()}
+        `;
+
+        // Fill nurse report
+        document.getElementById("nurseReport").innerText = nurseReport || "No report available.";
+
+        function submitLog() {
+            const action = document.getElementById("repairAction").value.trim();
+            const parts = document.getElementById("replacementParts").value.trim();
+
+            if (!action) {
+                alert("Please describe the repair actions taken.");
+                return;
+            }
+
+            // Save or send data logic (to server, database etc.)
+            alert("Maintenance log submitted successfully!");
+
+            // Optionally, clear storage or redirect
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+
+</html>

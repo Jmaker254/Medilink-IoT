@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MediLink IoT - Technician Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .login-container {
+            background-color: #fff;
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .login-container h2 {
+            margin-bottom: 30px;
+            color: #007bff;
+            font-weight: bold;
+        }
+        
+        .login-container input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+        
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .login-container button:hover {
+            background-color: #0056b3;
+        }
+        
+        .logo {
+            margin-bottom: 20px;
+        }
+        
+        .logo img {
+            width: 60px;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .error {
+            color: red;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <img src="https://img.icons8.com/fluency/96/medical-doctor.png" alt="MediLink Logo" />
+        </div>
+        <h2>MediLink IoT Portal</h2>
+        <div id="error" class="error"></div>
+        <input type="text" id="username" placeholder="Technician Name" autofocus>
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <div class="footer">© 2025 MediLink Healthcare Systems</div>
+    </div>
+
+    <script>
+        function login() {
+            const username = document.getElementById("username").value.trim().toLowerCase();
+            const password = document.getElementById("password").value.trim();
+            const error = document.getElementById("error");
+
+            if (username === "willies" && password === "4444") {
+                localStorage.setItem("technician", username);
+                window.location.href = "equipment.html";
+            } else {
+                error.textContent = "Invalid username or password.";
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Nurse Report - MediLink IoT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f8fc;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 60px auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        h2,
+        h3 {
+            color: #007bff;
+        }
+        
+        .equipment-info {
+            background-color: #eef5fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            margin-bottom: 30px;
+            resize: vertical;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Equipment Information</h2>
+        <div id="info" class="equipment-info">
+            Loading...
+        </div>
+
+        <h3>Nurse's Current Report</h3>
+        <textarea id="report" rows="4">Device powers off during use.</textarea>
+
+        <h3>Previous Maintenance Logs</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Technician</th>
+                    <th>Repair Performed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2023-08-01</td>
+                    <td>Jane Doe</td>
+                    <td>Replaced cable</td>
+                </tr>
+                <tr>
+                    <td>2023-12-12</td>
+                    <td>Mark T</td>
+                    <td>Reset firmware</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button onclick="next()">Continue to Technician Log</button>
+
+        <div class="footer">
+            © 2025 MediLink Healthcare Systems | Confidential
+        </div>
+    </div>
+
+    <script>
+        const dept = localStorage.getItem("department");
+        const equip = localStorage.getItem("equipment");
+
+        if (!dept || !equip) {
+            window.location.href = "select-equipment.html";
+        }
+
+        const infoHTML = `
+            <strong>Department:</strong> ${dept.charAt(0).toUpperCase() + dept.slice(1)}<br>
+            <strong>Equipment:</strong> ${equip}<br>
+            <strong>Serial No:</strong> MED-${Math.floor(Math.random() * 9000 + 1000)}
+        `;
+
+        document.getElementById("info").innerHTML = infoHTML;
+
+        function next() {
+            const report = document.getElementById("report").value.trim();
+            if (!report) {
+                alert("Please enter the nurse's report.");
+                return;
+            }
+            localStorage.setItem("nurseReport", report);
+            window.location.href = "technician-log.html";
+        }
+    </script>
+</body>
+
+</html>

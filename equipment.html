@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Select Equipment - MediLink IoT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f8fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        h2 {
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            margin-bottom: 30px;
+            color: #555;
+        }
+        
+        select,
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+        }
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .footer {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 20px;
+        }
+        
+        #technician-name {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .notification {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+        
+        .notification .count {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+        
+        #notif-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            width: 280px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            display: none;
+            z-index: 10;
+        }
+        
+        #notif-dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 10px;
+        }
+        
+        #notif-dropdown li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+        
+        #notif-dropdown li:hover {
+            background-color: #f1f1f1;
+        }
+        
+        #notif-dropdown li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 🔔 Notification Bell -->
+    <div class="notification" onclick="toggleNotif()">
+        🔔
+        <span class="count" id="notifCount">0</span>
+    </div>
+
+    <!-- Notification Dropdown -->
+    <div id="notif-dropdown">
+        <ul id="notifList">
+            <li>No pending reports.</li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <h2>Equipment Maintenance Portal</h2>
+        <p>Welcome, <span id="technician-name"></span></p>
+
+        <select id="department" required>
+            <option value="">Select Department</option>
+            <option value="radiology">Radiology</option>
+            <option value="icu">ICU</option>
+            <option value="surgery">Surgery</option>
+            <option value="pharmacy">Pharmacy</option>
+            <option value="laboratory">Laboratory</option>
+        </select>
+
+        <select id="equipment" required>
+            <option value="">Select Equipment</option>
+        </select>
+
+        <select id="equipmentId" required>
+            <option value="">Select Equipment ID</option>
+        </select>
+
+        <button onclick="proceed()">Next</button>
+
+        <div class="footer">© 2025 MediLink Healthcare Systems</div>
+    </div>
+
+    <script>
+        const technician = localStorage.getItem("technician");
+        if (!technician) {
+            window.location.href = "login.html";
+        } else {
+            document.getElementById("technician-name").textContent = technician.charAt(0).toUpperCase() + technician.slice(1);
+        }
+
+        const departmentSelect = document.getElementById("department");
+        const equipmentSelect = document.getElementById("equipment");
+        const equipmentIdSelect = document.getElementById("equipmentId");
+
+        const equipmentData = {
+            radiology: ["X-Ray Machine", "CT Scanner", "MRI Unit"],
+            icu: ["Ventilator", "Defibrillator", "Infusion Pump"],
+            surgery: ["Surgical Light", "Anesthesia Machine", "Electrosurgical Unit"],
+            pharmacy: ["Refrigerator", "Barcode Scanner", "Pill Counter"],
+            laboratory: ["Microscope", "Centrifuge", "Blood Analyzer"]
+        };
+
+        const equipmentIds = {
+            "X-Ray Machine": ["RX-001", "RX-002"],
+            "CT Scanner": ["CT-101", "CT-102"],
+            "MRI Unit": ["MRI-901"],
+            "Ventilator": ["VEN-301", "VEN-302"],
+            "Defibrillator": ["DEF-001"],
+            "Infusion Pump": ["INF-888"],
+            "Surgical Light": ["SL-777"],
+            "Anesthesia Machine": ["AM-123"],
+            "Electrosurgical Unit": ["EU-234"],
+            "Refrigerator": ["REF-011"],
+            "Barcode Scanner": ["BS-778"],
+            "Pill Counter": ["PC-402"],
+            "Microscope": ["MIC-111", "MIC-112"],
+            "Centrifuge": ["CEN-890"],
+            "Blood Analyzer": ["BA-654"]
+        };
+
+        departmentSelect.addEventListener("change", () => {
+            const selectedDept = departmentSelect.value;
+            equipmentSelect.innerHTML = `<option value="">Select Equipment</option>`;
+            equipmentIdSelect.innerHTML = `<option value="">Select Equipment ID</option>`;
+            if (selectedDept && equipmentData[selectedDept]) {
+                equipmentData[selectedDept].forEach(eq => {
+                    const opt = document.createElement("option");
+                    opt.value = eq;
+                    opt.textContent = eq;
+                    equipmentSelect.appendChild(opt);
+                });
+            }
+        });
+
+        equipmentSelect.addEventListener("change", () => {
+            const selectedEquip = equipmentSelect.value;
+            equipmentIdSelect.innerHTML = `<option value="">Select Equipment ID</option>`;
+            if (equipmentIds[selectedEquip]) {
+                equipmentIds[selectedEquip].forEach(id => {
+                    const opt = document.createElement("option");
+                    opt.value = id;
+                    opt.textContent = id;
+                    equipmentIdSelect.appendChild(opt);
+                });
+            }
+        });
+
+        function proceed() {
+            const dept = departmentSelect.value;
+            const equip = equipmentSelect.value;
+            const serial = equipmentIdSelect.value;
+
+            if (!dept || !equip || !serial) {
+                alert("Please select all fields.");
+                return;
+            }
+
+            const info = {
+                dept,
+                name: equip,
+                serial
+            };
+            localStorage.setItem("equipmentInfo", JSON.stringify(info));
+            window.location.href = "nurse-report.html";
+        }
+
+        // ========== 🔔 Notification Logic ==========
+        const pendingReports = [{
+            dept: "ICU",
+            equip: "Ventilator",
+            id: "VEN-301",
+            issue: "Power loss"
+        }, {
+            dept: "Radiology",
+            equip: "CT Scanner",
+            id: "CT-102",
+            issue: "Image freezing"
+        }];
+
+        const notifCount = document.getElementById("notifCount");
+        const notifList = document.getElementById("notifList");
+
+        if (pendingReports.length > 0) {
+            notifCount.textContent = pendingReports.length;
+            notifList.innerHTML = "";
+            pendingReports.forEach((r, i) => {
+                const li = document.createElement("li");
+                li.textContent = `${r.dept} - ${r.equip} (${r.id}): ${r.issue}`;
+                li.onclick = () => {
+                    localStorage.setItem("equipmentInfo", JSON.stringify({
+                        dept: r.dept,
+                        name: r.equip,
+                        serial: r.id
+                    }));
+                    window.location.href = "nurse-report.html";
+                };
+                notifList.appendChild(li);
+            });
+        }
+
+        function toggleNotif() {
+            const dropdown = document.getElementById("notif-dropdown");
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+
+        document.addEventListener("click", function(e) {
+            const notif = document.querySelector('.notification');
+            const dropdown = document.getElementById("notif-dropdown");
+            if (!notif.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+    </script>
+</body>
+
+</html>
