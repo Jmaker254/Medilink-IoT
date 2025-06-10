@@ -142,15 +142,35 @@
 
         document.getElementById("info").innerHTML = infoHTML;
 
-        function next() {
-            const report = document.getElementById("report").value.trim();
-            if (!report) {
-                alert("Please enter the nurse's report.");
-                return;
-            }
-            localStorage.setItem("nurseReport", report);
-            window.location.href = "technician-log.html";
+       function proceed() {
+    const dept = departmentSelect.value;
+    const equip = equipmentSelect.value;
+    const serial = equipmentIdSelect.value;
+
+    if (!dept || !equip || !serial) {
+        alert("Please select all fields.");
+        return;
+    }
+
+    const info = {
+        dept,
+        name: equip,
+        serial
+    };
+    localStorage.setItem("equipmentInfo", JSON.stringify(info));
+
+    // Open nurse report in a new tab
+    const nurseReportWindow = window.open("nurse-report.html", "_blank");
+
+    // Now show a confirmation dialog before proceeding
+    setTimeout(() => {
+        const confirmed = confirm("Did you review the nurse report? Click OK to proceed.");
+        if (confirmed) {
+            window.location.href = "technician-maintenance.html"; // or your actual next step
         }
+    }, 500); // delay for better UX
+}
+
     </script>
 </body>
 
