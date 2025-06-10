@@ -1,10 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta http-equiv="refresh" content="0; url=login.html">
-  <title>Redirecting...</title>
+    <meta charset="UTF-8">
+    <title>MediLink IoT - Technician Access</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 100px auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        h1 {
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+    </style>
 </head>
+
 <body>
-  If you're not redirected, <a href="login.html">click here</a>.
+    <div class="container">
+        <h1>Technician Login</h1>
+
+        <input type="text" id="technician" placeholder="Technician Name (e.g., John Doe)">
+        <input type="text" id="department" placeholder="Department (e.g., Cardiology)">
+        <input type="text" id="equipment" placeholder="Equipment (e.g., ECG Machine)">
+
+        <button onclick="goToNurseReport()">View Nurse Report</button>
+        <button onclick="goToTechnicianLog()">Log Maintenance</button>
+
+        <div class="footer">
+            © 2025 MediLink Healthcare Systems | Technician Portal
+        </div>
+    </div>
+
+    <script>
+        function saveData() {
+            const tech = document.getElementById("technician").value.trim();
+            const dept = document.getElementById("department").value.trim().toLowerCase();
+            const equip = document.getElementById("equipment").value.trim();
+
+            if (!tech || !dept || !equip) {
+                alert("Please fill in all fields.");
+                return false;
+            }
+
+            localStorage.setItem("technician", tech);
+            localStorage.setItem("department", dept);
+            localStorage.setItem("equipment", equip);
+            return true;
+        }
+
+        function goToNurseReport() {
+            if (saveData()) {
+                window.location.href = "nurse-report.html";
+            }
+        }
+
+        function goToTechnicianLog() {
+            if (saveData()) {
+                window.location.href = "technician-log.html";
+            }
+        }
+    </script>
 </body>
+
 </html>
